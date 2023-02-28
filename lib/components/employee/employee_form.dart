@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:employee_app/api_call/employee.dart';
+import 'package:employee_app/api_call/role.dart';
 import 'package:flutter/material.dart';
 
 import '../../constant/route_name.dart';
@@ -19,12 +20,13 @@ class _EmployeeFormState extends State<EmployeeForm> {
   final SharedPrefForObject sharedPref = SharedPrefForObject();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   EmployeeApi employeeApi = EmployeeApi();
-
+  RoleApi roleApi = RoleApi();
   bool _showPassword = false;
+  List<Role>? roles;
+  late String _selectedRole;
 
   late TextEditingController nameController;
   late TextEditingController emailController;
-  late TextEditingController roleController;
   late TextEditingController phoneNumberController;
   late TextEditingController passwordController;
   late TextEditingController photoLinkController;
@@ -36,25 +38,40 @@ class _EmployeeFormState extends State<EmployeeForm> {
   }
 
   void init() async {
+    nameController = TextEditingController(text: widget.employee?.name);
     photoLinkController =
         TextEditingController(text: widget.employee?.photoLink);
     phoneNumberController =
         TextEditingController(text: widget.employee?.phoneNumber);
     passwordController = TextEditingController(text: widget.employee?.password);
-    nameController = TextEditingController(text: widget.employee?.name);
     emailController = TextEditingController(text: widget.employee?.email);
-    roleController = TextEditingController(text: widget.employee?.role);
+
+    await getAllRole();
   }
 
   @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
-    roleController.dispose();
     phoneNumberController.dispose();
     passwordController.dispose();
     photoLinkController.dispose();
     super.dispose();
+  }
+
+  Future<void> getAllRole() async {
+    try {
+      var response = await roleApi.getAllRoleList();
+
+      if (response != null && response.success) {
+        setState(() {
+          _selectedRole = widget.employee?.role.id ?? response.roleDTOS[0].id;
+          roles = response.roleDTOS;
+        });
+      }
+    } catch (e) {
+      print("error while get role data" + e.toString());
+    }
   }
 
   Future<void> saveEmployeeData() async {
@@ -64,7 +81,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
             nameController.text,
             emailController.text,
             passwordController.text,
-            roleController.text,
+            _selectedRole,
             phoneNumberController.text,
             photoLinkController.text);
 
@@ -126,6 +143,35 @@ class _EmployeeFormState extends State<EmployeeForm> {
     );
   }
 
+  Widget roleInputDropdown() {
+    return InputDecorator(
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.people),
+          errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+          hintText: 'Masukkan role karyawan',
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0))),
+      isEmpty: _selectedRole == '',
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedRole,
+          isDense: true,
+          onChanged: (String? value) {
+            setState(() {
+              _selectedRole = value!;
+            });
+          },
+          items: roles?.map((Role role) {
+            return DropdownMenuItem<String>(
+              value: role.id,
+              child: Text(role.description),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -170,25 +216,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
                 },
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 15, bottom: 15),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.people),
-                  hintText: 'Role',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                ),
-                controller: roleController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Masukkan role karyawan';
-                  }
-                  return null;
-                },
-              ),
-            ),
+            if (roles != null) roleInputDropdown(),
             Container(
               margin: const EdgeInsets.only(top: 15, bottom: 15),
               child: TextFormField(

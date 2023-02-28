@@ -159,7 +159,8 @@ class EmployeeDataSource extends DataGridSource {
         DataGridCell<int>(columnName: 'id', value: employee.id),
         DataGridCell<String>(columnName: 'name', value: employee.name),
         DataGridCell<String>(columnName: 'email', value: employee.email),
-        DataGridCell<String>(columnName: 'role', value: employee.role),
+        DataGridCell<String>(
+            columnName: 'role', value: employee.role.description),
         const DataGridCell<Widget>(columnName: 'edit', value: null),
       ]);
     }).toList();
