@@ -1,0 +1,78 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'crud_employee.g.dart';
+
+@JsonSerializable()
+class Employee {
+  final int id;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
+  final String name;
+  final String email;
+  final String password;
+  final String role;
+  final String phoneNumber;
+  final String? photoLink;
+
+  Employee(this.id, this.createdAt, this.updatedAt, this.deletedAt, this.name,
+      this.email, this.password, this.role, this.phoneNumber, this.photoLink);
+
+  factory Employee.fromJson(Map<String, dynamic> json) =>
+      _$EmployeeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EmployeeToJson(this);
+}
+
+@JsonSerializable()
+class GetAllEmployeeDataResponse {
+  final bool success;
+  @JsonKey(name: "employeeDTOList")
+  final List<Employee> employeeList;
+
+  GetAllEmployeeDataResponse(this.success, this.employeeList);
+
+  factory GetAllEmployeeDataResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetAllEmployeeDataResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GetAllEmployeeDataResponseToJson(this);
+}
+
+@JsonSerializable()
+class CreateOrUpdateEmployeeByAdminRequest {
+  final int? id;
+  final String name;
+  final String email;
+  final String password;
+  final String role;
+  final String phoneNumber;
+  final String photoLink;
+
+  CreateOrUpdateEmployeeByAdminRequest(this.id, this.name, this.email,
+      this.password, this.role, this.phoneNumber, this.photoLink);
+
+  factory CreateOrUpdateEmployeeByAdminRequest.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateOrUpdateEmployeeByAdminRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$CreateOrUpdateEmployeeByAdminRequestToJson(this);
+}
+
+@JsonSerializable()
+class CreateOrUpdateEmployeeByAdminResponse {
+  final bool success;
+  final String message;
+  @JsonKey(name: "employeeDTO")
+  final Employee employee;
+
+  CreateOrUpdateEmployeeByAdminResponse(
+      this.success, this.message, this.employee);
+
+  factory CreateOrUpdateEmployeeByAdminResponse.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateOrUpdateEmployeeByAdminResponseFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$CreateOrUpdateEmployeeByAdminResponseToJson(this);
+}
