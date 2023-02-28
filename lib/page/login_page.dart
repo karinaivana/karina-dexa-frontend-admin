@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -27,18 +26,20 @@ class LoginPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 10, right: 20, left: 20, bottom: 10),
-      child: Column(children: [
-        Container(
-          padding: EdgeInsets.only(top: 30, bottom: 20),
-          child: Text(
-            "Masuk",
-            style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(top: 10, right: 20, left: 20, bottom: 10),
+        child: Column(children: [
+          Container(
+            padding: EdgeInsets.only(top: 30, bottom: 20),
+            child: Text(
+              "Masuk",
+              style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
+            ),
           ),
-        ),
-        const LoginForm()
-      ]),
+          const LoginForm()
+        ]),
+      ),
     );
   }
 }

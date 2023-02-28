@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:employee_app/components/employee/employee_form.dart';
 import 'package:flutter/material.dart';
 
-import '../constant/route_name.dart';
 import '../data/crud_employee.dart';
 import '../utils/shared_pref.dart';
 
@@ -64,20 +63,22 @@ class _CreateUpdateProfilePageState extends State<CreateUpdateProfilePage> {
         backgroundColor: Colors.white,
         body: _isloading
             ? const Center(child: CircularProgressIndicator())
-            : Container(
-                margin: const EdgeInsets.only(
-                    top: 10, right: 20, left: 20, bottom: 10),
-                child: Column(children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 30, bottom: 20),
-                    child: Text(
-                      _employee == null ? "Buat Akun" : "Edit Akun",
-                      style:
-                          TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
+            : SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.only(
+                      top: 10, right: 20, left: 20, bottom: 10),
+                  child: Column(children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 30, bottom: 20),
+                      child: Text(
+                        _employee == null ? "Buat Akun" : "Edit Akun",
+                        style: const TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.w700),
+                      ),
                     ),
-                  ),
-                  EmployeeForm(employee: _employee)
-                ]),
+                    EmployeeForm(employee: _employee)
+                  ]),
+                ),
               ));
   }
 }
